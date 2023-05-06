@@ -1,0 +1,182 @@
+name: StaffGui
+version: '${version}'
+main: fr.stevie.StaffGui
+api-version: 1.19.4
+author: Stevie
+description: Modére facilement
+website: mc.novelium.fr
+softdepend: [PremiumVanish]
+
+commands:
+  staffmode:
+    usage: /<command>
+    description: Passage en mode staff
+permissions:
+  staffgui.access:
+    description: Grants access to open Admin GUI
+    default: op
+  staffgui.heal:
+    description: Grants access to heal yourself
+    default: op
+  staffgui.feed:
+    description: Grants access to feed yourself
+    default: op
+  staffgui.gamemode:
+    description: Grants access to manage with gamemodes
+    default: op
+  staffgui.gamemode.survival:
+    description: Grants access to manage with gamemodes
+    default: op
+  staffgui.gamemode.creative:
+    description: Grants access to manage with gamemodes
+    default: op
+  staffgui.gamemode.adventure:
+    description: Grants access to manage with gamemodes
+    default: op
+  staffgui.gamemode.spectator:
+    description: Grants access to manage with gamemodes
+    default: op
+  staffgui.god:
+    description: Grants access to toggle god mode
+    default: op
+  staffgui.potions:
+    description: Grants access to manage with potions
+    default: op
+  staffgui.spawner:
+    description: Grants access to manage with spawners
+    default: op
+  staffgui.kill:
+    description: Grants access to kill yourself
+    default: op
+  staffgui.burn:
+    description: Grants access to burn yourself
+    default: op
+  staffgui.time:
+    description: Grants access to change time
+    default: op
+  staffgui.weather:
+    description: Grants access to change weather
+    default: op
+  staffgui.info:
+    description: Grants access to see players info
+    default: op
+  staffgui.spawner.other:
+    description: Grants access to spawn mobs on other players
+    default: op
+  staffgui.kick.other:
+    description: Grants access to kick other players
+    default: op
+  staffgui.kick.bypass:
+    description: Become immune to kicks
+    default: op
+  staffgui.ban:
+    description: Grants access to ban players
+    default: op
+  staffgui.ban.bypass:
+    description: Become immune to bans
+    default: op
+  staffgui.mute:
+    description: Grants access to mute other players
+    default: op
+  staffgui.unmute:
+    description: Grants access to unmute other players
+    default: op
+  staffgui.unban:
+    description: Grants access to unban other players
+    default: op
+  staffgui.heal.other:
+    description: Grants access to heal other players
+    default: op
+  staffgui.feed.other:
+    description: Grants access to feed other players
+    default: op
+  staffgui.gamemode.other:
+    description: Grants access to change gamemode for other players
+    default: op
+  staffgui.gamemode.other.survival:
+    description: Grants access to change gamemode for other players
+    default: op
+  staffgui.gamemode.other.creative:
+    description: Grants access to change gamemode for other players
+    default: op
+  staffgui.gamemode.other.adventure:
+    description: Grants access to change gamemode for other players
+    default: op
+  staffgui.gamemode.other.spectator:
+    description: Grants access to change gamemode for other players
+    default: op
+  staffgui.god.other:
+    description: Grants access to give god mode to other players
+    default: op
+  staffgui.teleport:
+    description: Grants access to teleport to other players
+    default: op
+  staffgui.potions.other:
+    description: Grants access to give potion effects to other players
+    default: op
+  staffgui.kill.other:
+    description: Grants access to kill other players
+    default: op
+  staffgui.burn.other:
+    description: Grants access to burn other players
+    default: op
+  staffgui.teleport.other:
+    description: Grants access to teleport other player to you
+    default: op
+  staffgui.money:
+    description: Grants access to manage with your money
+    default: op
+  staffgui.money.other:
+    description: Grants access to manage others money
+    default: op
+  staffgui.inventory:
+    description: Grants access to see players inventory
+    default: op
+  staffgui.inventory.edit:
+    description: Grants access to edit players inventory
+    default: op
+  staffgui.enderchest:
+    description: Grants access to see players enderchest
+    default: op
+  staffgui.enderchest.edit:
+    description: Grants access to edit players enderchest
+    default: op
+  staffgui.vanish:
+    description: Grants access to toggle vanish
+    default: op
+  staffgui.vanish.other:
+    description: Grants access to vanish other players
+    default: op
+  staffgui.firework:
+    description: Grants access to spawn firework
+    default: op
+  staffgui.firework.other:
+    description: Grants access to spawn firework on other player
+    default: op
+  staffgui.lightning:
+    description: Grants access to spawn lightning
+    default: op
+  staffgui.lightning.other:
+    description: Grants access to spawn lightning on other player
+    default: op
+  staffgui.custom:
+    description: Grants access to custom commands
+    default: op
+  staffgui.freeze.other:
+    description: Grants access to freeze other player
+    default: op
+  staffgui.freeze.bypass:
+    description: Become immune to freeze
+    default: op
+  staffgui.maintenance:
+    description: Bypass maintenance mode
+    default: op
+  staffgui.maintenance.manage:
+    description: Grants access to toggle maintenance mode
+    default: op
+  staffgui.reload:
+    description: Grants access to reload all configuration files
+    default: op
+  staffgui.check:
+    description: Grants access to check players stats
+    default: op
