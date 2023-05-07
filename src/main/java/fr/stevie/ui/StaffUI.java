@@ -1,11 +1,13 @@
 package fr.stevie.ui;
 
-
 import fr.stevie.StaffGui;
 import fr.stevie.utils.*;
-//import de.myzelyam.api.vanish.VanishAPI;
-//import de.myzelyam.api.vanish.PlayerHideEvent;
+
+import de.myzelyam.api.vanish.VanishAPI;
+import de.myzelyam.api.vanish.PlayerHideEvent;
+
 import org.apache.commons.lang3.math.NumberUtils;
+
 import org.bukkit.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +19,7 @@ import java.util.*;
 public class StaffUI {
 
 
+    @SuppressWarnings("deprecation")
     public static HashMap<Player, Player> target_player = new HashMap<>();
 
     //Ban
@@ -35,6 +38,7 @@ public class StaffUI {
 
     public Inventory GUI_Main(Player p) {
 
+
         Inventory inv_main = Bukkit.createInventory(null, 27, Message.getMessage("inventory_main"));
 
         Player random_player = Bukkit.getOnlinePlayers().stream().findAny().get();
@@ -52,6 +56,7 @@ public class StaffUI {
     }
 
     public Inventory GUI_Player(Player p) {
+        @SuppressWarnings("deprecation")
 
         String inventory_player_name = Message.getMessage("inventory_player").replace("{player}", p.getName());
 
@@ -61,25 +66,27 @@ public class StaffUI {
             Item.create(inv_player, "LIGHT_BLUE_STAINED_GLASS_PANE", 1, i, " ");
         }
 
-        if (p.hasPermission("admingui.info")) {
+        if (p.hasPermission("staffgui.info")) {
             Item.createPlayerHead(inv_player, p.getName(), 1, 5, Message.getMessage("player_info").replace("{player}", p.getName()), Message.chat("&eHeal: " + Math.round(p.getHealth())), Message.chat("&7Feed: " + Math.round(p.getFoodLevel())), Message.chat("&aGamemode: " + p.getGameMode().toString()), Message.chat("&5IP: " + p.getAddress().getAddress()));
         } else {
             Item.createPlayerHead(inv_player, p.getName(), 1, 5, Message.getMessage("player_info").replace("{player}", p.getName()));
         }
 
-        if (p.hasPermission("admingui.heal")) {
+        if (p.hasPermission("staffgui.heal")) {
             Item.create(inv_player, "GOLDEN_APPLE", 1, 11, Message.getMessage("player_heal"));
-        } else {
+        }
+        else {
             Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 11, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.feed")) {
+        if (p.hasPermission("staffgui.feed")) {
             Item.create(inv_player, "COOKED_BEEF", 1, 13, Message.getMessage("player_feed"));
-        } else {
+        }
+        else {
             Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 13, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.gamemode")) {
+        if (p.hasPermission("staffgui.gamemode")) {
             if (p.getPlayer().getGameMode() == GameMode.SURVIVAL) {
                 Item.create(inv_player, "DIRT", 1, 15, Message.getMessage("player_survival"));
             } else if (p.getPlayer().getGameMode() == GameMode.ADVENTURE) {
@@ -97,7 +104,7 @@ public class StaffUI {
             Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 15, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.god")) {
+        if (p.hasPermission("staffgui.god")) {
             if (!Bukkit.getVersion().contains("1.8")) {
                 if (p.isInvulnerable()) {
                     Item.create(inv_player, "RED_TERRACOTTA", 1, 17, Message.getMessage("player_god_disabled"));
@@ -115,25 +122,19 @@ public class StaffUI {
             Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 17, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.potions")) {
-            Item.create(inv_player, "POTION", 1, 19, Message.getMessage("player_potions"));
-        } else {
-            Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 19, Message.getMessage("permission"));
-        }
-
-        if (p.hasPermission("admingui.kill")) {
+        if (p.hasPermission("staffgui.kill")) {
             Item.create(inv_player, "DIAMOND_SWORD", 1, 23, Message.getMessage("player_kill"));
         } else {
             Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 23, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.burn")) {
+        if (p.hasPermission("staffgui.burn")) {
             Item.create(inv_player, "FLINT_AND_STEEL", 1, 25, Message.getMessage("player_burn"));
         } else {
             Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 25, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.lightning")) {
+        if (p.hasPermission("staffgui.lightning")) {
             if (Bukkit.getVersion().contains("1.8") || Bukkit.getVersion().contains("1.9") || Bukkit.getVersion().contains("1.10") || Bukkit.getVersion().contains("1.11") || Bukkit.getVersion().contains("1.12")) {
                 Item.create(inv_player, "STICK", 1, 27, Message.getMessage("player_lightning"));
             } else {
@@ -143,19 +144,19 @@ public class StaffUI {
             Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 27, Message.getMessage("permission"));
         }
 
-        //if (p.hasPermission("admingui.vanish")) {
-        //    if (Bukkit.getPluginManager().isPluginEnabled("SuperVanish") || Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
-        //        if (VanishAPI.isInvisible(p)) {
-        //            Item.create(inv_player, "FEATHER", 1, 33, Message.getMessage("player_vanish_disabled"));
-        //        } else {
-        //            Item.create(inv_player, "FEATHER", 1, 33, Message.getMessage("player_vanish_enabled"));
-        //        }
-        //    } else {
-        //        Item.create(inv_player, "FEATHER", 1, 33, Message.getMessage("player_vanish_enabled"));
-        //    }
-        //} else {
-        //    Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 33, Message.getMessage("permission"));
-        //}
+        if (p.hasPermission("staffgui.vanish")) {
+            if (Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
+                if (VanishAPI.isInvisible(p)) {
+                    Item.create(inv_player, "FEATHER", 1, 33, Message.getMessage("player_vanish_disabled"));
+                } else {
+                    Item.create(inv_player, "FEATHER", 1, 33, Message.getMessage("player_vanish_enabled"));
+                }
+            } else {
+                Item.create(inv_player, "FEATHER", 1, 33, Message.getMessage("player_vanish_enabled"));
+            }
+        } else {
+            Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 33, Message.getMessage("permission"));
+        }
 
         Item.create(inv_player, "REDSTONE_BLOCK", 1, 45, Message.getMessage("player_back"));
 
@@ -170,7 +171,7 @@ public class StaffUI {
             Item.create(inv_world, "LIGHT_BLUE_STAINED_GLASS_PANE", 1, i, " ");
         }
 
-        if (p.hasPermission("admingui.time")) {
+        if (p.hasPermission("staffgui.time")) {
             if (p.getPlayer().getWorld().getTime() < 13000) {
                 Item.create(inv_world, "GOLD_BLOCK", 1, 11, Message.getMessage("world_day"));
             } else {
@@ -180,7 +181,7 @@ public class StaffUI {
             Item.create(inv_world, "RED_STAINED_GLASS_PANE", 1, 11, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.weather")) {
+        if (p.hasPermission("staffgui.weather")) {
             if (p.getPlayer().getWorld().isThundering()) {
                 Item.create(inv_world, " BLUE_TERRACOTTA", 1, 13, Message.getMessage("world_thunder"));
             } else if (p.getPlayer().getWorld().hasStorm()) {
@@ -256,7 +257,7 @@ public class StaffUI {
             Item.create(inv_players_settings, "LIGHT_BLUE_STAINED_GLASS_PANE", 1, i, " ");
         }
 
-        if (p.hasPermission("admingui.info")) {
+        if (p.hasPermission("staffgui.info")) {
             Item.createPlayerHead(inv_players_settings, target_player.getName(), 1, 5, Message.getMessage("players_settings_info").replace("{player}", target_player.getName()), Message.chat("&eHeal: " + Math.round(target_player.getHealth())), Message.chat("&7Feed: " + Math.round(target_player.getFoodLevel())), Message.chat("&aGamemode: " + target_player.getGameMode().toString()), Message.chat("&5IP: " + target_player.getAddress().getAddress()));
         } else {
             Item.createPlayerHead(inv_players_settings, target_player.getName(), 1, 5, Message.getMessage("players_settings_info").replace("{player}", target_player.getName()));
@@ -264,13 +265,13 @@ public class StaffUI {
 
         Item.create(inv_players_settings, "DIAMOND_SWORD", 1, 11, Message.getMessage("players_settings_actions"));
 
-        if (p.hasPermission("admingui.kick.other")) {
+        if (p.hasPermission("staffgui.kick.other")) {
             Item.create(inv_players_settings, "BLACK_TERRACOTTA", 1, 15, Message.getMessage("players_settings_kick_player"));
         } else {
             Item.create(inv_players_settings, "RED_STAINED_GLASS_PANE", 1, 15, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.ban")) {
+        if (p.hasPermission("staffgui.ban")) {
             Item.create(inv_players_settings, "BEDROCK", 1, 17, Message.getMessage("players_settings_ban_player"));
         } else {
             Item.create(inv_players_settings, "RED_STAINED_GLASS_PANE", 1, 17, Message.getMessage("permission"));
@@ -292,25 +293,25 @@ public class StaffUI {
             Item.create(inv_actions, "LIGHT_BLUE_STAINED_GLASS_PANE", 1, i, " ");
         }
 
-        if (p.hasPermission("admingui.info")) {
+        if (p.hasPermission("staffgui.info")) {
             Item.createPlayerHead(inv_actions, target.getName(), 1, 5, Message.getMessage("players_settings_info").replace("{player}", target.getName()), Message.chat("&eHeal: " + Math.round(target.getHealth())), Message.chat("&7Feed: " + Math.round(target.getFoodLevel())), Message.chat("&aGamemode: " + target.getGameMode().toString()), Message.chat("&5IP: " + target.getAddress().getAddress()));
         } else {
             Item.createPlayerHead(inv_actions, target.getName(), 1, 5, Message.getMessage("actions_info").replace("{player}", target.getName()));
         }
 
-        if (p.hasPermission("admingui.heal.other")) {
+        if (p.hasPermission("staffgui.heal.other")) {
             Item.create(inv_actions, "GOLDEN_APPLE", 1, 11, Message.getMessage("actions_heal"));
         } else {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 11, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.feed.other")) {
+        if (p.hasPermission("staffgui.feed.other")) {
             Item.create(inv_actions, "COOKED_BEEF", 1, 13, Message.getMessage("actions_feed"));
         } else {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 13, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.gamemode.other")) {
+        if (p.hasPermission("staffgui.gamemode.other")) {
             if (target.getGameMode() == GameMode.SURVIVAL) {
                 Item.create(inv_actions, "DIRT", 1, 15, Message.getMessage("actions_survival"));
             } else if (target.getGameMode() == GameMode.ADVENTURE) {
@@ -328,7 +329,7 @@ public class StaffUI {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 15, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.god.other")) {
+        if (p.hasPermission("staffgui.god.other")) {
             if (!Bukkit.getVersion().contains("1.8")) {
                 if (target.isInvulnerable()) {
                     Item.create(inv_actions, "RED_TERRACOTTA", 1, 17, Message.getMessage("actions_god_disabled"));
@@ -346,31 +347,19 @@ public class StaffUI {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 17, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.teleport")) {
+        if (p.hasPermission("staffgui.teleport")) {
             Item.create(inv_actions, "ENDER_PEARL", 1, 19, Message.getMessage("actions_teleport_to_player"));
         } else {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 19, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.potions.other")) {
-            Item.create(inv_actions, "POTION", 1, 21, Message.getMessage("actions_potions"));
-        } else {
-            Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 21, Message.getMessage("permission"));
-        }
-
-        if (p.hasPermission("admingui.kill.other")) {
+        if (p.hasPermission("staffgui.kill.other")) {
             Item.create(inv_actions, "DIAMOND_SWORD", 1, 23, Message.getMessage("actions_kill_player"));
         } else {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 23, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.spawner.other")) {
-            Item.create(inv_actions, "SPAWNER", 1, 25, Message.getMessage("actions_spawner"));
-        } else {
-            Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 25, Message.getMessage("permission"));
-        }
-
-        if (p.hasPermission("admingui.teleport.other")) {
+        if (p.hasPermission("staffgui.teleport.other")) {
             if (Bukkit.getVersion().contains("1.8")) {
                 Item.create(inv_actions, "ENDER_PEARL", 1, 27, Message.getMessage("actions_teleport_player_to_you"));
             } else {
@@ -380,33 +369,33 @@ public class StaffUI {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 27, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.inventory")) {
+        if (p.hasPermission("staffgui.inventory")) {
             Item.create(inv_actions, "BOOK", 1, 29, Message.getMessage("actions_inventory"));
         } else {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 29, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.burn.other")) {
+        if (p.hasPermission("staffgui.burn.other")) {
             Item.create(inv_actions, "FLINT_AND_STEEL", 1, 31, Message.getMessage("actions_burn_player"));
         } else {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 31, Message.getMessage("permission"));
         }
 
-//        if (p.hasPermission("admingui.vanish.other")) {
-//            if (Bukkit.getPluginManager().isPluginEnabled("SuperVanish") || Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
-//                if (VanishAPI.isInvisible(target)) {
-//                    Item.create(inv_actions, "FEATHER", 1, 33, Message.getMessage("actions_vanish_disabled"));
-//                } else {
-//                    Item.create(inv_actions, "FEATHER", 1, 33, Message.getMessage("actions_vanish_enabled"));
-//                }
-//            } else {
-//                Item.create(inv_actions, "FEATHER", 1, 33, Message.getMessage("actions_vanish_enabled"));
-//            }
-//        } else {
-//            Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 33, Message.getMessage("permission"));
-//        }
+        if (p.hasPermission("staffgui.vanish.other")) {
+            if (Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
+                if (VanishAPI.isInvisible(target)) {
+                    Item.create(inv_actions, "FEATHER", 1, 33, Message.getMessage("actions_vanish_disabled"));
+                } else {
+                    Item.create(inv_actions, "FEATHER", 1, 33, Message.getMessage("actions_vanish_enabled"));
+                }
+            } else {
+                Item.create(inv_actions, "FEATHER", 1, 33, Message.getMessage("actions_vanish_enabled"));
+            }
+        } else {
+            Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 33, Message.getMessage("permission"));
+        }
 
-        if (p.hasPermission("admingui.lightning.other")) {
+        if (p.hasPermission("staffgui.lightning.other")) {
             if (Bukkit.getVersion().contains("1.8") || Bukkit.getVersion().contains("1.9") || Bukkit.getVersion().contains("1.10") || Bukkit.getVersion().contains("1.11") || Bukkit.getVersion().contains("1.12")) {
                 Item.create(inv_actions, "STICK", 1, 35, Message.getMessage("actions_lightning"));
             } else {
@@ -416,16 +405,10 @@ public class StaffUI {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 35, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("admingui.firework.other")) {
+        if (p.hasPermission("staffgui.firework.other")) {
             Item.create(inv_actions, "FIREWORK_ROCKET", 1, 37, Message.getMessage("actions_firework"));
         } else {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 37, Message.getMessage("permission"));
-        }
-
-        if (p.hasPermission("admingui.fakeop")) {
-            Item.create(inv_actions, "PAPER", 1, 39, Message.getMessage("actions_fakeop"));
-        } else {
-            Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 39, Message.getMessage("permission"));
         }
 
         Item.create(inv_actions, "REDSTONE_BLOCK", 1, 54, Message.getMessage("actions_back"));
@@ -621,26 +604,26 @@ public class StaffUI {
             p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_burn"));
         } else if (InventoryGUI.getClickedItem(clicked, Message.getMessage("player_lightning"))) {
             p.getWorld().strikeLightning(p.getLocation());
-//        }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("player_vanish_enabled"))){
-//            if (Bukkit.getPluginManager().isPluginEnabled("SuperVanish") || Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
-//                VanishAPI.hidePlayer(p);
-//                p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_hide"));
-//            }else{
-//                p.sendMessage(Message.getMessage("prefix") + Message.getMessage("vanish_required"));
-//            }
-//            p.closeInventory();
-//        }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("player_vanish_disabled"))){
-//            if (Bukkit.getPluginManager().isPluginEnabled("SuperVanish") || Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
-//                VanishAPI.showPlayer(p);
-//                p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_visible"));
-//            }else{
-//                p.sendMessage(Message.getMessage("prefix") + Message.getMessage("vanish_required"));
-//            }
-//            p.closeInventory();
-//        }
-//    }
+        }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("player_vanish_enabled"))){
+            if (Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
+                VanishAPI.hidePlayer(p);
+                p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_hide"));
+            }else{
+                p.sendMessage(Message.getMessage("prefix") + Message.getMessage("vanish_required"));
+            }
+            p.closeInventory();
+        }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("player_vanish_disabled"))){
+            if (Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
+                VanishAPI.showPlayer(p);
+                p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_visible"));
+            }else{
+                p.sendMessage(Message.getMessage("prefix") + Message.getMessage("vanish_required"));
+            }
+            p.closeInventory();
         }
     }
+
+
     public void clicked_world(Player p, int slot, ItemStack clicked, Inventory inv){
 
         if(InventoryGUI.getClickedItem(clicked, Message.getMessage("world_back"))) {
@@ -778,23 +761,23 @@ public class StaffUI {
                 p.openInventory(GUI_Actions(p,target_player));
             }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("actions_inventory"))){
                 p.openInventory(GUI_Inventory(p, target_player));
-//            }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("actions_vanish_enabled"))){
-//                if (Bukkit.getPluginManager().isPluginEnabled("SuperVanish") || Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
-//                    VanishAPI.hidePlayer(target_player);
-//                    p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_player_hide").replace("{player}", target_player.getName()));
-//                    target_player.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_hide"));
-//                }else{
-//                    p.sendMessage(Message.getMessage("prefix") + Message.getMessage("vanish_required"));
-//                }
-//                p.closeInventory();
-//            }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("actions_vanish_disabled"))){
-//                if (Bukkit.getPluginManager().isPluginEnabled("SuperVanish") || Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
-//                    VanishAPI.showPlayer(target_player);
-//                    p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_player_visible").replace("{player}", target_player.getName()));
-//                    target_player.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_visible"));
-//                }else{
-//                    p.sendMessage(Message.getMessage("prefix") + Message.getMessage("vanish_required"));
-//                }
+            }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("actions_vanish_enabled"))){
+                if (Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
+                    VanishAPI.hidePlayer(target_player);
+                    p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_player_hide").replace("{player}", target_player.getName()));
+                    target_player.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_hide"));
+                }else{
+                    p.sendMessage(Message.getMessage("prefix") + Message.getMessage("vanish_required"));
+                }
+                p.closeInventory();
+            }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("actions_vanish_disabled"))){
+                if ( Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
+                    VanishAPI.showPlayer(target_player);
+                    p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_player_visible").replace("{player}", target_player.getName()));
+                    target_player.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_visible"));
+                }else{
+                    p.sendMessage(Message.getMessage("prefix") + Message.getMessage("vanish_required"));
+                }
                 p.closeInventory();
             }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("actions_lightning"))){
                 target_player.getWorld().strikeLightning(target_player.getLocation());
@@ -814,7 +797,7 @@ public class StaffUI {
             if(InventoryGUI.getClickedItem(clicked,Message.getMessage("kick_back"))){
                 p.openInventory(GUI_Players_Settings(p, target_player));
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("kick_hacking"))){
-                if(target_player.hasPermission("admingui.kick.bypass")){
+                if(target_player.hasPermission("staffgui.kick.bypass")){
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_kick_bypass"));
                     p.closeInventory();
                 }else{
@@ -823,7 +806,7 @@ public class StaffUI {
                     p.closeInventory();
                 }
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("kick_griefing"))){
-                if(target_player.hasPermission("admingui.kick.bypass")){
+                if(target_player.hasPermission("staffgui.kick.bypass")){
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_kick_bypass"));
                     p.closeInventory();
                 }else{
@@ -832,7 +815,7 @@ public class StaffUI {
                     p.closeInventory();
                 }
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("kick_spamming"))){
-                if(target_player.hasPermission("admingui.kick.bypass")){
+                if(target_player.hasPermission("staffgui.kick.bypass")){
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_kick_bypass"));
                     p.closeInventory();
                 }else{
@@ -841,7 +824,7 @@ public class StaffUI {
                     p.closeInventory();
                 }
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("kick_advertising"))){
-                if(target_player.hasPermission("admingui.kick.bypass")){
+                if(target_player.hasPermission("staffgui.kick.bypass")){
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_kick_bypass"));
                     p.closeInventory();
                 }else{
@@ -850,7 +833,7 @@ public class StaffUI {
                     p.closeInventory();
                 }
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("kick_swearing"))){
-                if(target_player.hasPermission("admingui.kick.bypass")){
+                if(target_player.hasPermission("staffgui.kick.bypass")){
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_kick_bypass"));
                     p.closeInventory();
                 }else{
@@ -880,7 +863,7 @@ public class StaffUI {
             if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_back"))){
                 p.openInventory(GUI_Players_Settings(p, target_player));
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_hacking"))){
-                if(target_player.hasPermission("admingui.ban.bypass")){
+                if(target_player.hasPermission("staffgui.ban.bypass")){
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_ban_bypass"));
                     p.closeInventory();
                 }else{
@@ -890,7 +873,7 @@ public class StaffUI {
                     p.closeInventory();
                 }
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_griefing"))){
-                if(target_player.hasPermission("admingui.ban.bypass")){
+                if(target_player.hasPermission("staffgui.ban.bypass")){
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_ban_bypass"));
                     p.closeInventory();
                 }else{
@@ -900,7 +883,7 @@ public class StaffUI {
                     p.closeInventory();
                 }
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_spamming"))){
-                if(target_player.hasPermission("admingui.ban.bypass")){
+                if(target_player.hasPermission("staffgui.ban.bypass")){
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_ban_bypass"));
                     p.closeInventory();
                 }else{
@@ -910,7 +893,7 @@ public class StaffUI {
                     p.closeInventory();
                 }
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_advertising"))){
-                if(target_player.hasPermission("admingui.ban.bypass")){
+                if(target_player.hasPermission("staffgui.ban.bypass")){
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_ban_bypass"));
                     p.closeInventory();
                 }else{
@@ -920,7 +903,7 @@ public class StaffUI {
                     p.closeInventory();
                 }
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_swearing"))){
-                if(target_player.hasPermission("admingui.ban.bypass")){
+                if(target_player.hasPermission("staffgui.ban.bypass")){
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_ban_bypass"));
                     p.closeInventory();
                 }else{
@@ -930,221 +913,89 @@ public class StaffUI {
                     p.closeInventory();
                 }
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_years"))){
-                switch (ban_years.getOrDefault(p,0)){
-                    case 0:
-                        ban_years.put(p, 1);
-                        break;
-                    case 1:
-                        ban_years.put(p, 2);
-                        break;
-                    case 2:
-                        ban_years.put(p, 3);
-                        break;
-                    case 3:
-                        ban_years.put(p, 4);
-                        break;
-                    case 4:
-                        ban_years.put(p, 5);
-                        break;
-                    case 5:
-                        ban_years.put(p, 6);
-                        break;
-                    case 6:
-                        ban_years.put(p, 7);
-                        break;
-                    case 7:
-                        ban_years.put(p, 8);
-                        break;
-                    case 8:
-                        ban_years.put(p, 9);
-                        break;
-                    case 9:
-                        ban_years.put(p, 10);
-                        break;
-                    case 10:
-                        ban_years.put(p, 15);
-                        break;
-                    case 15:
-                        ban_years.put(p, 20);
-                        break;
-                    case 20:
-                        ban_years.put(p, 30);
-                        break;
-                    case 30:
-                        ban_years.put(p, 0);
-                        break;
+                switch (ban_years.getOrDefault(p, 0)) {
+                    case 0 -> ban_years.put(p, 1);
+                    case 1 -> ban_years.put(p, 2);
+                    case 2 -> ban_years.put(p, 3);
+                    case 3 -> ban_years.put(p, 4);
+                    case 4 -> ban_years.put(p, 5);
+                    case 5 -> ban_years.put(p, 6);
+                    case 6 -> ban_years.put(p, 7);
+                    case 7 -> ban_years.put(p, 8);
+                    case 8 -> ban_years.put(p, 9);
+                    case 9 -> ban_years.put(p, 10);
+                    case 10 -> ban_years.put(p, 15);
+                    case 15 -> ban_years.put(p, 20);
+                    case 20 -> ban_years.put(p, 30);
+                    case 30 -> ban_years.put(p, 0);
                 }
                 p.openInventory(GUI_Ban(p, target_player));
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_months"))){
-                switch (ban_months.getOrDefault(p,0)){
-                    case 0:
-                        ban_months.put(p, 1);
-                        break;
-                    case 1:
-                        ban_months.put(p, 2);
-                        break;
-                    case 2:
-                        ban_months.put(p, 3);
-                        break;
-                    case 3:
-                        ban_months.put(p, 4);
-                        break;
-                    case 4:
-                        ban_months.put(p, 5);
-                        break;
-                    case 5:
-                        ban_months.put(p, 6);
-                        break;
-                    case 6:
-                        ban_months.put(p, 7);
-                        break;
-                    case 7:
-                        ban_months.put(p, 8);
-                        break;
-                    case 8:
-                        ban_months.put(p, 9);
-                        break;
-                    case 9:
-                        ban_months.put(p, 10);
-                        break;
-                    case 10:
-                        ban_months.put(p, 11);
-                        break;
-                    case 11:
-                        ban_months.put(p, 12);
-                        break;
-                    case 12:
-                        ban_months.put(p, 0);
-                        break;
+                switch (ban_months.getOrDefault(p, 0)) {
+                    case 0 -> ban_months.put(p, 1);
+                    case 1 -> ban_months.put(p, 2);
+                    case 2 -> ban_months.put(p, 3);
+                    case 3 -> ban_months.put(p, 4);
+                    case 4 -> ban_months.put(p, 5);
+                    case 5 -> ban_months.put(p, 6);
+                    case 6 -> ban_months.put(p, 7);
+                    case 7 -> ban_months.put(p, 8);
+                    case 8 -> ban_months.put(p, 9);
+                    case 9 -> ban_months.put(p, 10);
+                    case 10 -> ban_months.put(p, 11);
+                    case 11 -> ban_months.put(p, 12);
+                    case 12 -> ban_months.put(p, 0);
                 }
                 p.openInventory(GUI_Ban(p, target_player));
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_days"))){
-                switch (ban_days.getOrDefault(p,0)){
-                    case 0:
-                        ban_days.put(p, 1);
-                        break;
-                    case 1:
-                        ban_days.put(p, 2);
-                        break;
-                    case 2:
-                        ban_days.put(p, 3);
-                        break;
-                    case 3:
-                        ban_days.put(p, 4);
-                        break;
-                    case 4:
-                        ban_days.put(p, 5);
-                        break;
-                    case 5:
-                        ban_days.put(p, 6);
-                        break;
-                    case 6:
-                        ban_days.put(p, 7);
-                        break;
-                    case 7:
-                        ban_days.put(p, 8);
-                        break;
-                    case 8:
-                        ban_days.put(p, 9);
-                        break;
-                    case 9:
-                        ban_days.put(p, 10);
-                        break;
-                    case 10:
-                        ban_days.put(p, 15);
-                        break;
-                    case 15:
-                        ban_days.put(p, 20);
-                        break;
-                    case 20:
-                        ban_days.put(p, 30);
-                        break;
-                    case 30:
-                        ban_days.put(p, 0);
-                        break;
+                switch (ban_days.getOrDefault(p, 0)) {
+                    case 0 -> ban_days.put(p, 1);
+                    case 1 -> ban_days.put(p, 2);
+                    case 2 -> ban_days.put(p, 3);
+                    case 3 -> ban_days.put(p, 4);
+                    case 4 -> ban_days.put(p, 5);
+                    case 5 -> ban_days.put(p, 6);
+                    case 6 -> ban_days.put(p, 7);
+                    case 7 -> ban_days.put(p, 8);
+                    case 8 -> ban_days.put(p, 9);
+                    case 9 -> ban_days.put(p, 10);
+                    case 10 -> ban_days.put(p, 15);
+                    case 15 -> ban_days.put(p, 20);
+                    case 20 -> ban_days.put(p, 30);
+                    case 30 -> ban_days.put(p, 0);
                 }
                 p.openInventory(GUI_Ban(p, target_player));
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_hours"))){
-                switch (ban_hours.getOrDefault(p, 0)){
-                    case 0:
-                        ban_hours.put(p, 1);
-                        break;
-                    case 1:
-                        ban_hours.put(p, 2);
-                        break;
-                    case 2:
-                        ban_hours.put(p, 3);
-                        break;
-                    case 3:
-                        ban_hours.put(p, 4);
-                        break;
-                    case 4:
-                        ban_hours.put(p, 5);
-                        break;
-                    case 5:
-                        ban_hours.put(p, 6);
-                        break;
-                    case 6:
-                        ban_hours.put(p, 7);
-                        break;
-                    case 7:
-                        ban_hours.put(p, 8);
-                        break;
-                    case 8:
-                        ban_hours.put(p, 9);
-                        break;
-                    case 9:
-                        ban_hours.put(p, 10);
-                        break;
-                    case 10:
-                        ban_hours.put(p, 15);
-                        break;
-                    case 15:
-                        ban_hours.put(p, 20);
-                        break;
-                    case 20:
-                        ban_hours.put(p, 0);
-                        break;
+                switch (ban_hours.getOrDefault(p, 0)) {
+                    case 0 -> ban_hours.put(p, 1);
+                    case 1 -> ban_hours.put(p, 2);
+                    case 2 -> ban_hours.put(p, 3);
+                    case 3 -> ban_hours.put(p, 4);
+                    case 4 -> ban_hours.put(p, 5);
+                    case 5 -> ban_hours.put(p, 6);
+                    case 6 -> ban_hours.put(p, 7);
+                    case 7 -> ban_hours.put(p, 8);
+                    case 8 -> ban_hours.put(p, 9);
+                    case 9 -> ban_hours.put(p, 10);
+                    case 10 -> ban_hours.put(p, 15);
+                    case 15 -> ban_hours.put(p, 20);
+                    case 20 -> ban_hours.put(p, 0);
                 }
                 p.openInventory(GUI_Ban(p, target_player));
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_minutes"))){
-                switch (ban_minutes.getOrDefault(p,0)){
-                    case 0:
-                        ban_minutes.put(p, 5);
-                        break;
-                    case 5:
-                        ban_minutes.put(p, 10);
-                        break;
-                    case 10:
-                        ban_minutes.put(p, 15);
-                        break;
-                    case 15:
-                        ban_minutes.put(p, 20);
-                        break;
-                    case 20:
-                        ban_minutes.put(p, 25);
-                        break;
-                    case 25:
-                        ban_minutes.put(p, 30);
-                        break;
-                    case 30:
-                        ban_minutes.put(p, 35);
-                        break;
-                    case 35:
-                        ban_minutes.put(p, 40);
-                        break;
-                    case 40:
-                        ban_minutes.put(p, 45);
-                        break;
-                    case 45:
-                        ban_minutes.put(p, 50);
-                        break;
-                    case 50:
-                        ban_minutes.put(p, 55);
-                        break;
-                    case 55:
-                        ban_minutes.put(p, 0);
-                        break;
+                switch (ban_minutes.getOrDefault(p, 0)) {
+                    case 0 -> ban_minutes.put(p, 5);
+                    case 5 -> ban_minutes.put(p, 10);
+                    case 10 -> ban_minutes.put(p, 15);
+                    case 15 -> ban_minutes.put(p, 20);
+                    case 20 -> ban_minutes.put(p, 25);
+                    case 25 -> ban_minutes.put(p, 30);
+                    case 30 -> ban_minutes.put(p, 35);
+                    case 35 -> ban_minutes.put(p, 40);
+                    case 40 -> ban_minutes.put(p, 45);
+                    case 45 -> ban_minutes.put(p, 50);
+                    case 50 -> ban_minutes.put(p, 55);
+                    case 55 -> ban_minutes.put(p, 0);
                 }
                 p.openInventory(GUI_Ban(p, target_player));
             }
