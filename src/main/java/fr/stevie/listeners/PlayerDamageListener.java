@@ -19,7 +19,7 @@ public class PlayerDamageListener implements Listener {
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event){
 
-        if(Bukkit.getVersion().contains("1.8")){
+        if(Bukkit.getVersion().contains("1.19.4")){
             if(event.getEntity() instanceof Player p){
                 if(StaffUI.god.getOrDefault(p, false)){
                     event.setCancelled(true);

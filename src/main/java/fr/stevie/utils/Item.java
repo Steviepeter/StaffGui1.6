@@ -10,7 +10,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.ArrayList;
 
 public class Item {
-    @SuppressWarnings("deprecation")
 
     public static ItemStack create(Inventory inv, String material, int amount, int invSlot, String displayName, String... loreString){
         ItemStack item;

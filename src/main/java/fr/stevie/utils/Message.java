@@ -16,7 +16,7 @@ public class Message {
         if(StaffGui.getInstance().getLang().getString(config) != null){
             return chat(StaffGui.getInstance().getLang().getString(config));
         }else{
-            return chat("&cValue: " + config + " is missing in language.yml file! Please add it or delete language.yml file.");
+            return chat(Message.getMessage("prefix") + "&cIl manque la valeur" + config + " dans le fichier language.yml.");
         }
     }
 }

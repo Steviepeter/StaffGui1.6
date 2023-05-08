@@ -11,13 +11,11 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
 public class StaffUI {
-
 
     @SuppressWarnings("deprecation")
     public static HashMap<Player, Player> target_player = new HashMap<>();
@@ -56,7 +54,6 @@ public class StaffUI {
     }
 
     public Inventory GUI_Player(Player p) {
-        @SuppressWarnings("deprecation")
 
         String inventory_player_name = Message.getMessage("inventory_player").replace("{player}", p.getName());
 
@@ -134,16 +131,6 @@ public class StaffUI {
             Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 25, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("staffgui.lightning")) {
-            if (Bukkit.getVersion().contains("1.8") || Bukkit.getVersion().contains("1.9") || Bukkit.getVersion().contains("1.10") || Bukkit.getVersion().contains("1.11") || Bukkit.getVersion().contains("1.12")) {
-                Item.create(inv_player, "STICK", 1, 27, Message.getMessage("player_lightning"));
-            } else {
-                Item.create(inv_player, "TRIDENT", 1, 27, Message.getMessage("player_lightning"));
-            }
-        } else {
-            Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 27, Message.getMessage("permission"));
-        }
-
         if (p.hasPermission("staffgui.vanish")) {
             if (Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
                 if (VanishAPI.isInvisible(p)) {
@@ -158,7 +145,7 @@ public class StaffUI {
             Item.create(inv_player, "RED_STAINED_GLASS_PANE", 1, 33, Message.getMessage("permission"));
         }
 
-        Item.create(inv_player, "REDSTONE_BLOCK", 1, 45, Message.getMessage("player_back"));
+        Item.create(inv_player, "REDSTONE_BLOCK", 1, 45, Message.getMessage("back"));
 
         return inv_player;
     }
@@ -193,7 +180,7 @@ public class StaffUI {
             Item.create(inv_world, "RED_STAINED_GLASS_PANE", 1, 13, Message.getMessage("permission"));
         }
 
-        Item.create(inv_world, "REDSTONE_BLOCK", 1, 27, Message.getMessage("world_back"));
+        Item.create(inv_world, "REDSTONE_BLOCK", 1, 27, Message.getMessage("back"));
 
         return inv_world;
     }
@@ -243,7 +230,7 @@ public class StaffUI {
             Item.create(inv_players, "PAPER", 1, 51, Message.getMessage("players_next"));
         }
 
-        Item.create(inv_players, "REDSTONE_BLOCK", 1, 54, Message.getMessage("players_back"));
+        Item.create(inv_players, "REDSTONE_BLOCK", 1, 54, Message.getMessage("back"));
 
         return inv_players;
     }
@@ -265,7 +252,7 @@ public class StaffUI {
 
         Item.create(inv_players_settings, "DIAMOND_SWORD", 1, 11, Message.getMessage("players_settings_actions"));
 
-        if (p.hasPermission("staffgui.kick.other")) {
+        if (p.hasPermission("staffgui.kick")) {
             Item.create(inv_players_settings, "BLACK_TERRACOTTA", 1, 15, Message.getMessage("players_settings_kick_player"));
         } else {
             Item.create(inv_players_settings, "RED_STAINED_GLASS_PANE", 1, 15, Message.getMessage("permission"));
@@ -277,7 +264,7 @@ public class StaffUI {
             Item.create(inv_players_settings, "RED_STAINED_GLASS_PANE", 1, 17, Message.getMessage("permission"));
         }
 
-        Item.create(inv_players_settings, "REDSTONE_BLOCK", 1, 27, Message.getMessage("players_settings_back"));
+        Item.create(inv_players_settings, "REDSTONE_BLOCK", 1, 27, Message.getMessage("back"));
 
         return inv_players_settings;
     }
@@ -299,13 +286,13 @@ public class StaffUI {
             Item.createPlayerHead(inv_actions, target.getName(), 1, 5, Message.getMessage("actions_info").replace("{player}", target.getName()));
         }
 
-        if (p.hasPermission("staffgui.heal.other")) {
+        if (p.hasPermission("staffgui.heal")) {
             Item.create(inv_actions, "GOLDEN_APPLE", 1, 11, Message.getMessage("actions_heal"));
         } else {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 11, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("staffgui.feed.other")) {
+        if (p.hasPermission("staffgui.feed")) {
             Item.create(inv_actions, "COOKED_BEEF", 1, 13, Message.getMessage("actions_feed"));
         } else {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 13, Message.getMessage("permission"));
@@ -329,7 +316,7 @@ public class StaffUI {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 15, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("staffgui.god.other")) {
+        if (p.hasPermission("staffgui.god")) {
             if (!Bukkit.getVersion().contains("1.8")) {
                 if (target.isInvulnerable()) {
                     Item.create(inv_actions, "RED_TERRACOTTA", 1, 17, Message.getMessage("actions_god_disabled"));
@@ -353,13 +340,13 @@ public class StaffUI {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 19, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("staffgui.kill.other")) {
+        if (p.hasPermission("staffgui.kill")) {
             Item.create(inv_actions, "DIAMOND_SWORD", 1, 23, Message.getMessage("actions_kill_player"));
         } else {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 23, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("staffgui.teleport.other")) {
+        if (p.hasPermission("staffgui.teleport")) {
             if (Bukkit.getVersion().contains("1.8")) {
                 Item.create(inv_actions, "ENDER_PEARL", 1, 27, Message.getMessage("actions_teleport_player_to_you"));
             } else {
@@ -375,7 +362,7 @@ public class StaffUI {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 29, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("staffgui.burn.other")) {
+        if (p.hasPermission("staffgui.burn")) {
             Item.create(inv_actions, "FLINT_AND_STEEL", 1, 31, Message.getMessage("actions_burn_player"));
         } else {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 31, Message.getMessage("permission"));
@@ -395,23 +382,7 @@ public class StaffUI {
             Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 33, Message.getMessage("permission"));
         }
 
-        if (p.hasPermission("staffgui.lightning.other")) {
-            if (Bukkit.getVersion().contains("1.8") || Bukkit.getVersion().contains("1.9") || Bukkit.getVersion().contains("1.10") || Bukkit.getVersion().contains("1.11") || Bukkit.getVersion().contains("1.12")) {
-                Item.create(inv_actions, "STICK", 1, 35, Message.getMessage("actions_lightning"));
-            } else {
-                Item.create(inv_actions, "TRIDENT", 1, 35, Message.getMessage("actions_lightning"));
-            }
-        } else {
-            Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 35, Message.getMessage("permission"));
-        }
-
-        if (p.hasPermission("staffgui.firework.other")) {
-            Item.create(inv_actions, "FIREWORK_ROCKET", 1, 37, Message.getMessage("actions_firework"));
-        } else {
-            Item.create(inv_actions, "RED_STAINED_GLASS_PANE", 1, 37, Message.getMessage("permission"));
-        }
-
-        Item.create(inv_actions, "REDSTONE_BLOCK", 1, 54, Message.getMessage("actions_back"));
+        Item.create(inv_actions, "REDSTONE_BLOCK", 1, 54, Message.getMessage("back"));
 
         return inv_actions;
     }
@@ -433,7 +404,7 @@ public class StaffUI {
         Item.create(inv_kick, "LIGHT_BLUE_TERRACOTTA", 1, 16, Message.getMessage("kick_advertising"));
         Item.create(inv_kick, "YELLOW_TERRACOTTA", 1, 18, Message.getMessage("kick_swearing"));
 
-        Item.create(inv_kick, "REDSTONE_BLOCK", 1, 27, Message.getMessage("kick_back"));
+        Item.create(inv_kick, "REDSTONE_BLOCK", 1, 27, Message.getMessage("back"));
 
         return inv_kick;
     }
@@ -485,7 +456,7 @@ public class StaffUI {
         Item.create(inv_ban, "LIGHT_BLUE_TERRACOTTA", 1, 33, Message.getMessage("ban_advertising"));
         Item.create(inv_ban, "YELLOW_TERRACOTTA", 1, 34, Message.getMessage("ban_swearing"));
 
-        Item.create(inv_ban, "REDSTONE_BLOCK", 1, 36, Message.getMessage("ban_back"));
+        Item.create(inv_ban, "REDSTONE_BLOCK", 1, 36, Message.getMessage("back"));
 
         return inv_ban;
     }
@@ -530,7 +501,7 @@ public class StaffUI {
 
         Item.create(inv_inventory, "BLUE_TERRACOTTA", 1, 50, Message.getMessage("inventory_clear"));
 
-        Item.create(inv_inventory, "REDSTONE_BLOCK", 1, 54, Message.getMessage("inventory_back"));
+        Item.create(inv_inventory, "REDSTONE_BLOCK", 1, 54, Message.getMessage("back"));
 
         return inv_inventory;
     }
@@ -555,7 +526,7 @@ public class StaffUI {
 
     public void clicked_player(Player p, int slot, ItemStack clicked, Inventory inv) {
 
-        if (InventoryGUI.getClickedItem(clicked, Message.getMessage("player_back"))) {
+        if (InventoryGUI.getClickedItem(clicked, Message.getMessage("back"))) {
             p.openInventory(GUI_Main(p));
         } else if (InventoryGUI.getClickedItem(clicked, Message.getMessage("player_info").replace("{player}", p.getName()))) {
             p.openInventory(GUI_Player(p));
@@ -602,8 +573,6 @@ public class StaffUI {
         } else if (InventoryGUI.getClickedItem(clicked, Message.getMessage("player_burn"))) {
             p.setFireTicks(500);
             p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_burn"));
-        } else if (InventoryGUI.getClickedItem(clicked, Message.getMessage("player_lightning"))) {
-            p.getWorld().strikeLightning(p.getLocation());
         }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("player_vanish_enabled"))){
             if (Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
                 VanishAPI.hidePlayer(p);
@@ -626,7 +595,7 @@ public class StaffUI {
 
     public void clicked_world(Player p, int slot, ItemStack clicked, Inventory inv){
 
-        if(InventoryGUI.getClickedItem(clicked, Message.getMessage("world_back"))) {
+        if(InventoryGUI.getClickedItem(clicked, Message.getMessage("back"))) {
             p.openInventory(GUI_Main(p));
         }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("world_day"))){
             p.getPlayer().getWorld().setTime(13000);
@@ -666,7 +635,7 @@ public class StaffUI {
                     p.closeInventory();
                 }
             }
-        }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("players_back"))){
+        }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("back"))){
             p.openInventory(GUI_Main(p));
         }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("players_previous"))){
             page.put(p, page.get(p)-1);
@@ -681,7 +650,7 @@ public class StaffUI {
     public void clicked_players_settings(Player p, int slot, ItemStack clicked, Inventory inv, Player target_player){
 
         if(target_player.isOnline()){
-            if(InventoryGUI.getClickedItem(clicked,Message.getMessage("players_settings_back"))){
+            if(InventoryGUI.getClickedItem(clicked,Message.getMessage("back"))){
                 p.openInventory(GUI_Players(p));
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("players_settings_info").replace("{player}", target_player.getName()))){
                 p.openInventory(GUI_Players_Settings(p, target_player));
@@ -702,7 +671,7 @@ public class StaffUI {
     public void clicked_actions(Player p, int slot, ItemStack clicked, Inventory inv, Player target_player){
 
         if(target_player.isOnline()){
-            if(InventoryGUI.getClickedItem(clicked,Message.getMessage("actions_back"))){
+            if(InventoryGUI.getClickedItem(clicked,Message.getMessage("back"))){
                 p.openInventory(GUI_Players_Settings(p, target_player));
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("actions_info").replace("{player}", target_player.getName()))){
                 p.openInventory(GUI_Actions(p,target_player));
@@ -770,20 +739,39 @@ public class StaffUI {
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("vanish_required"));
                 }
                 p.closeInventory();
-            }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("actions_vanish_disabled"))){
-                if ( Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
+            }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("actions_vanish_disabled"))) {
+                if (Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
                     VanishAPI.showPlayer(target_player);
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_player_visible").replace("{player}", target_player.getName()));
                     target_player.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_visible"));
-                }else{
+                } else {
                     p.sendMessage(Message.getMessage("prefix") + Message.getMessage("vanish_required"));
                 }
                 p.closeInventory();
-            }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("actions_lightning"))){
-                target_player.getWorld().strikeLightning(target_player.getLocation());
-            }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("actions_fakeop"))){
-                Bukkit.broadcastMessage(Message.chat("&7&o[Server: Made " + target_player.getName() +" a server operator]"));
             }
+
+        //    else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("actions_freeze_enabled")) || InventoryGUI.getClickedItem(clicked, Message.getMessage( "actions_freeze_disabled"))){
+        //    if(Settings.freeze.getOrDefault(target_player.getUniqueId(), false)){
+        //        Settings.freeze.put(target_player.getUniqueId(), false);
+        //        StaffGui.getInstance().getPlayers().set(target_player.getUniqueId() + ".frozen", null);
+        //        if(StaffGui.getInstance().getConf().getString("freeze_title", null) != null || StaffGui.getInstance().getConf().getString("freeze_subtitle", null) != null)
+        //            target_player.resetTitle();
+        //        target_player.sendMessage(Message.getMessage("message_freeze_disabled").replace("{player}", p.getName()));
+        //    }else{
+        //        if(target_player.hasPermission("admingui.freeze.bypass")){
+        //            Settings.freeze.put(target_player.getUniqueId(), true);
+        //            StaffGui.getInstance().getPlayers().set(target_player.getUniqueId() + ".frozen", true);
+        //            if(StaffGui.getInstance().getConf().getString("freeze_title", null) != null && StaffGui.getInstance().getConf().getString("freeze_subtitle", null) != null)
+        //                target_player.sendTitle(Message.chat(StaffGui.getInstance().getConf().getString("freeze_title", "")), Message.chat(StaffGui.getInstance().getConf().getString("freeze_subtitle", "")), 50, 72000, 50);
+        //            target_player.sendMessage(Message.getMessage("message_freeze_enabled").replace("{player}", p.getName()));
+        //        }else{
+        //            p.closeInventory();
+        //            p.sendMessage(Message.getMessage("permission"));
+        //        }
+        //    }
+        //    p.openInventory(GUI_Actions(p, target_player));
+
+
         }else{
             p.sendMessage(Message.getMessage("prefix") + Message.getMessage("message_player_not_found"));
             p.closeInventory();
@@ -794,7 +782,7 @@ public class StaffUI {
     public void clicked_kick(Player p, int slot, ItemStack clicked, Inventory inv, Player target_player){
 
         if(target_player.isOnline()){
-            if(InventoryGUI.getClickedItem(clicked,Message.getMessage("kick_back"))){
+            if(InventoryGUI.getClickedItem(clicked,Message.getMessage("back"))){
                 p.openInventory(GUI_Players_Settings(p, target_player));
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("kick_hacking"))){
                 if(target_player.hasPermission("staffgui.kick.bypass")){
@@ -860,7 +848,7 @@ public class StaffUI {
         Date time = new Date(System.currentTimeMillis()+(mil_minute*ban_minutes.getOrDefault(p,0))+(mil_hour*ban_hours.getOrDefault(p,0))+(mil_day*ban_days.getOrDefault(p,0))+(mil_month*ban_months.getOrDefault(p,0))+(mil_year*ban_years.getOrDefault(p,0)));
 
         if(target_player.isOnline()){
-            if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_back"))){
+            if(InventoryGUI.getClickedItem(clicked,Message.getMessage("back"))){
                 p.openInventory(GUI_Players_Settings(p, target_player));
             }else if(InventoryGUI.getClickedItem(clicked,Message.getMessage("ban_hacking"))){
                 if(target_player.hasPermission("staffgui.ban.bypass")){
@@ -1008,7 +996,7 @@ public class StaffUI {
     public void clicked_inventory(Player p, int slot, ItemStack clicked, Inventory inv, Player target_player, boolean left_click){
 
         if(target_player.isOnline()){
-            if(InventoryGUI.getClickedItem(clicked, Message.getMessage("inventory_back"))){
+            if(InventoryGUI.getClickedItem(clicked, Message.getMessage("back"))){
                 p.openInventory(GUI_Actions(p, target_player));
             }else if(InventoryGUI.getClickedItem(clicked, Message.getMessage("inventory_clear"))){
                 target_player.getInventory().clear();

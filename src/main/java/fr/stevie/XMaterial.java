@@ -9,8 +9,6 @@ import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.potion.Potion;
 
 import java.util.*;
@@ -33,7 +31,7 @@ import java.util.regex.PatternSyntaxException;
  * Material Source Code: https://hub.spigotmc.org/stash/projects/SPIGOT/repos/bukkit/browse/src/main/java/org/bukkit/Material.java
  * XMaterial v1: https://www.spigotmc.org/threads/329630/
  * <p>
- * This class will throw a "unsupported material" error if someone tries to use an item with an invalid data value which can only happen in 1.12 servers and below or when the
+ * This class will throw an "unsupported material" error if someone tries to use an item with an invalid data value which can only happen in 1.12 servers and below or when the
  * utility is missing a new material in that specific version.
  * To get an invalid item, (aka <a href="https://minecraft.fandom.com/wiki/Missing_Texture_Block">Missing Texture Block</a>) you can use the command
  * <b>/give @p minecraft:dirt 1 10</b> where 1 is the item amount, and 10 is the data value. The material {@link #DIRT} with a data value of {@code 10} doesn't exist.
@@ -1306,13 +1304,7 @@ public enum XMaterial {
     private static final Cache<String, Pattern> CACHED_REGEX = CacheBuilder.newBuilder()
             .expireAfterAccess(3, TimeUnit.HOURS)
             .build();
-    /**
-     * The maximum data value in the pre-flattening update which belongs to {@link #VILLAGER_SPAWN_EGG}<br>
-     * https://minecraftitemids.com/types/spawn-egg
-     *
-     * @see #matchXMaterialWithData(String)
-     * @since 8.0.0
-     */
+
     private static final byte MAX_DATA_VALUE = 120;
     /**
      * Used to tell the system that the passed object's (name or material) data value
@@ -1359,26 +1351,11 @@ public enum XMaterial {
         }
     }
 
-    /**
-     * The data value of this material https://minecraft.gamepedia.com/Java_Edition_data_values/Pre-flattening
-     * It's never a negative number.
-     *
-     * @see #getData()
-     */
+
     private final byte data;
-    /**
-     * A list of material names that was being used for older verions.
-     *
-     * @see #getLegacy()
-     */
 
     private final String[] legacy;
-    /**
-     * The cached Bukkit parsed material.
-     *
-     * @see #parseMaterial()
-     * @since 9.0.0
-     */
+
 
     private final Material material;
 
@@ -1398,20 +1375,6 @@ public enum XMaterial {
 
     XMaterial(String... legacy) {this(0, legacy);}
 
-    /**
-     * Checks if the version is 1.13 Aquatic Update or higher.
-     * An invocation of this method yields the cached result from the expression:
-     * <p>
-     * <blockquote>
-     * {@link #supports(int) 13}}
-     * </blockquote>
-     *
-     * @return true if 1.13 or higher.
-     * @see #getVersion()
-     * @see #supports(int)
-     * @since 1.0.0
-     * @deprecated Use {@code XMaterial.supports(13)} instead. This method name can be confusing.
-     */
     @Deprecated
     public static boolean isNewVersion() {
         return Data.ISFLAT;
@@ -1451,24 +1414,6 @@ public enum XMaterial {
         return Optional.ofNullable(NAMES.get(name));
     }
 
-    /**
-     * The current version of the server.
-     *
-     * @return the current server version minor number.
-     * @see #supports(int)
-     * @since 2.0.0
-     */
-    public static int getVersion() {
-        return Data.VERSION;
-    }
-
-    /**
-     * When using 1.13+, this helps to find the old material name
-     * with its data value using a cached search for optimization.
-     *
-     * @see #matchDefinedXMaterial(String, byte)
-     * @since 1.0.0
-     */
 
     private static XMaterial requestOldXMaterial(String name, byte data) {
         String holder = name + data;
@@ -1550,17 +1495,7 @@ public enum XMaterial {
                 .orElseThrow(() -> new IllegalArgumentException("Unsupported material with no data value: " + material.name()));
     }
 
-    /**
-     * Parses the given item as an XMaterial using its material and data value (durability)
-     * if not a damageable item {@link ItemStack#getDurability()}.
-     *
-     * @param item the ItemStack to match.
-     *
-     * @return an XMaterial if matched any.
-     * @throws IllegalArgumentException may be thrown as an unexpected exception.
-     * @see #matchXMaterial(Material)
-     * @since 2.0.0
-     */
+
 
     @SuppressWarnings("deprecation")
     public static XMaterial matchXMaterial(ItemStack item) {
@@ -1568,24 +1503,13 @@ public enum XMaterial {
         String material = item.getType().name();
         byte data = (byte) (Data.ISFLAT || item.getType().getMaxDurability() > 0 ? 0 : item.getDurability());
 
-        // They didn't really use the items data value in older versions.
-        if (!Data.ISFLAT && item.hasItemMeta() && material.equals("MONSTER_EGG")) {
-            ItemMeta meta = item.getItemMeta();
-            if (meta instanceof SpawnEggMeta) {
-                SpawnEggMeta egg = (SpawnEggMeta) meta;
-                material = egg.getSpawnedType().name() + "_SPAWN_EGG";
-            }
-        }
-
-        // Potions used the items data value to store
-        // information about the type of potion in 1.8
         if (!supports(9) && material.endsWith("ION")) {
             // There's also 16000+ data value technique, but this is more reliable.
             return Potion.fromItemStack(item).isSplash() ? SPLASH_POTION : POTION;
         }
 
         // Refer to the enum for info.
-        // Currently this is the only material with a non-zero data value
+        // Currently, this is the only material with a non-zero data value
         // that has been renamed after the flattening update.
         // If this happens to more materials in the future,
         // I might have to change then system.
@@ -1730,26 +1654,7 @@ public enum XMaterial {
         return Data.VERSION >= version;
     }
 
-    public String[] getLegacy() {
-        return this.legacy;
-    }
 
-    /**
-     * XMaterial Paradox (Duplication Check)
-     * I've concluded that this is just an infinite loop that keeps
-     * going around the Singular Form and the Plural Form materials. A waste of brain cells and a waste of time.
-     * This solution works just fine anyway.
-     * <p>
-     * A solution for XMaterial Paradox.
-     * Manually parses the duplicated materials to find the exact material based on the server version.
-     * If the name ends with "S" -> Plural Form Material.
-     * Plural methods are only plural if they're also {@link #DUPLICATED}
-     * <p>
-     * The only special exceptions are {@link #BRICKS} and {@link #NETHER_BRICKS}
-     *
-     * @return true if this material is a plural form material, otherwise false.
-     * @since 8.0.0
-     */
     private boolean isPlural() {
         // this.name().charAt(this.name().length() - 1) == 'S'
         return this == CARROTS || this == POTATOES;
@@ -1826,18 +1731,6 @@ public enum XMaterial {
         return false;
     }
 
-    /**
-     * Sets the {@link Material} (and data value on older versions) of an item.
-     * Damageable materials will not have their durability changed.
-     * <p>
-     * Use {@link #parseItem()} instead when creating new ItemStacks.
-     *
-     * @param item the item to change its type.
-     *
-     * @see #parseItem()
-     * @since 3.0.0
-     */
-
     @SuppressWarnings("deprecation")
     public ItemStack setType(ItemStack item) {
         Objects.requireNonNull(item, "Cannot set material for null ItemStack");
@@ -1849,15 +1742,6 @@ public enum XMaterial {
         return item;
     }
 
-    /**
-     * Checks if the given material name matches any of this xmaterial's legacy material names.
-     * All the values passed to this method will not be null or empty and are formatted correctly.
-     *
-     * @param name the material name to check.
-     *
-     * @return true if it's one of the legacy names, otherwise false.
-     * @since 2.0.0
-     */
     private boolean anyMatchLegacy(String name) {
         for (int i = this.legacy.length - 1; i >= 0; i--) {
             if (name.equals(this.legacy[i])) return true;
@@ -1897,8 +1781,6 @@ public enum XMaterial {
      */
     @SuppressWarnings("deprecation")
     public int getId() {
-        // https://hub.spigotmc.org/stash/projects/SPIGOT/repos/bukkit/diff/src/main/java/org/bukkit/Material.java?until=1cb03826ebde4ef887519ce37b0a2a341494a183
-        // Should start working again in 1.16+
         Material material = this.parseMaterial();
         if (material == null) return -1;
         try {
@@ -1908,55 +1790,15 @@ public enum XMaterial {
         }
     }
 
-    /**
-     * The data value of this material <a href="https://minecraft.gamepedia.com/Java_Edition_data_values/Pre-flattening">pre-flattening</a>.
-     * <p>
-     * Can be accessed with {@link ItemStack#getData()} then {@code MaterialData#getData()}
-     * or {@link ItemStack#getDurability()} if not damageable.
-     *
-     * @return data of this material, or 0 if none.
-     * @since 1.0.0
-     */
     @SuppressWarnings("deprecation")
     public byte getData() {
         return data;
     }
 
-    /**
-     * Parses an item from this XMaterial.
-     * Uses data values on older versions.
-     *
-     * @return an ItemStack with the same material (and data value if in older versions.)
-     * @see #setType(ItemStack)
-     * @since 2.0.0
-     */
-
-    @SuppressWarnings("deprecation")
-    public ItemStack parseItem() {
-        Material material = this.parseMaterial();
-        if (material == null) return null;
-        return Data.ISFLAT ? new ItemStack(material) : new ItemStack(material, 1, this.data);
-    }
-
-    /**
-     * Parses the material of this XMaterial.
-     *
-     * @return the material related to this XMaterial based on the server version.
-     * @since 1.0.0
-     */
-
     public Material parseMaterial() {
         return this.material;
     }
 
-    /**
-     * Checks if an item has the same material (and data value on older versions).
-     *
-     * @param item item to check.
-     *
-     * @return true if the material is the same as the item's material (and data value if on older versions), otherwise false.
-     * @since 1.0.0
-     */
     @SuppressWarnings("deprecation")
     public boolean isSimilar(ItemStack item) {
         Objects.requireNonNull(item, "Cannot compare with null ItemStack");
@@ -1964,30 +1806,7 @@ public enum XMaterial {
         return Data.ISFLAT || item.getDurability() == this.data || item.getType().getMaxDurability() > 0;
     }
 
-    /**
-     * Checks if this material is supported in the current version.
-     * Suggested materials will be ignored.
-     * <p>
-     * Note that you should use {@link #parseMaterial()} or {@link #parseItem()} and check if it's null
-     * if you're going to parse and use the material/item later.
-     *
-     * @return true if the material exists in {@link Material} list.
-     * @since 2.0.0
-     */
-    public boolean isSupported() {
-        return this.material != null;
-    }
 
-    /**
-     * This method is needed due to Java enum initialization limitations.
-     * It's really inefficient yes, but it's only used for initialization.
-     * <p>
-     * Yes there are many other ways like comparing the hardcoded ordinal or using a boolean in the enum constructor,
-     * but it's not really a big deal.
-     * <p>
-     * This method should not be called if the version is after the flattening update {@link Data#ISFLAT}
-     * and is only used for parsing materials, not matching, for matching check {@link #DUPLICATED}
-     */
     private boolean isDuplicated() {
         switch (this.name()) {
             case "MELON":
@@ -2017,12 +1836,7 @@ public enum XMaterial {
      * @since 9.0.0
      */
     private static final class Data {
-        /**
-         * The current version of the server in the form of a major version.
-         * If the static initialization for this fails, you know something's wrong with the server software.
-         *
-         * @since 1.0.0
-         */
+
         private static final int VERSION;
 
         static { // This needs to be right below VERSION because of initialization order.
